@@ -49,3 +49,19 @@ class User(Base):
 
     def change_password(self, new_password: str) -> None:  # auto-commit
         self.password = User.generate_hash(new_password)
+
+
+class TokenBlockList(Base):
+    __tablename__ = "token_block_list"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    jti = Column(String(36), nullable=False)
+
+    @classmethod
+    def find_by_jti(cls, session: Session, jti) -> TokenBlockList:
+        return session.execute(select(cls).filter_by(jti=jti)).scalars().first()
+
+    @classmethod
+    def add_by_jti(cls, session: Session, jti) -> None:
+        session.add(cls(jti=jti))
+        session.flush()

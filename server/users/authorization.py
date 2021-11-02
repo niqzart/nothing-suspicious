@@ -1,8 +1,10 @@
+from flask import jsonify
+from flask_jwt_extended import jwt_required, get_jwt, unset_jwt_cookies
 from flask_restx import Namespace, Resource
 from flask_restx.reqparse import RequestParser
 
 from add import argument_parser, with_session, add_auth_cookies
-from .database import User
+from .database import User, TokenBlockList
 
 users_namespace: Namespace = Namespace("users", path="/")
 
@@ -35,3 +37,15 @@ class SignIn(Resource):
         if User.verify_hash(password, user.password):
             return "success", user
         return "wrong password", user
+
+
+@users_namespace.route("/logout/")
+class UserLogout(Resource):
+    @with_session
+    @jwt_required()
+    def post(self, session):
+        """ Logs the user out, blocks the token """
+        response = jsonify(True)
+        TokenBlockList.add_by_jti(session, get_jwt()["jti"])
+        unset_jwt_cookies(response)
+        return response
