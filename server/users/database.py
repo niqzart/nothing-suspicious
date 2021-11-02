@@ -29,19 +29,19 @@ class User(Base):
         return session.execute(select(cls).where(cls.id == entry_id)).scalars().first()
 
     @classmethod
-    def find_by_email_address(cls, session: Session, email) -> Optional[User]:
+    def find_by_email(cls, session: Session, email) -> Optional[User]:
         return session.execute(select(cls).where(cls.email == email)).scalars().first()
 
     @classmethod
     def create(cls, session: Session, email: str, password: str) -> Optional[User]:
-        if cls.find_by_email_address(session, email):
+        if cls.find_by_email(session, email):
             return None
         new_user = cls(email=email, password=cls.generate_hash(password))
         session.add(new_user)
         return new_user
 
     def change_email(self, session: Session, new_email: str) -> bool:
-        if User.find_by_email_address(session, new_email):
+        if User.find_by_email(session, new_email):
             return False
         self.email = new_email
         self.email_confirmed = False
