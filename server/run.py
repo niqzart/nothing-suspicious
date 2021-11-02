@@ -1,7 +1,7 @@
 from flask import send_from_directory
 from flask_restx import Api
 
-from setup import app
+from setup import app, db_meta
 
 
 @app.route("/")
@@ -11,5 +11,7 @@ def serve():
 
 api = Api(app, doc="/doc/")
 
+db_meta.create_all()
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
