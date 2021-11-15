@@ -3,7 +3,7 @@ from enum import auto
 from sqlalchemy import Column, Integer, String, ForeignKey, select
 from sqlalchemy.orm import relationship
 
-from add import TypeEnum, Identifiable
+from add import TypeEnum, Identifiable, Marshalable, create_marshal_model
 from setup import Base
 from users import User
 
@@ -14,7 +14,8 @@ class CounterModes(TypeEnum):
     EXCLUDE_USERS = auto()
 
 
-class LinkCounter(Base, Identifiable):
+@create_marshal_model("link-info", "link", "counter", "mode")
+class LinkCounter(Base, Identifiable, Marshalable):
     __tablename__ = "link_counters"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
