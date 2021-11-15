@@ -3,7 +3,7 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager
 
 from add import with_session
-from counters import link_moderation_namespace
+from counters import link_moderation_namespace, rolling_namespace
 from users import users_namespace, TokenBlockList
 from setup import app, db_meta
 
@@ -16,6 +16,7 @@ def serve():
 api = Api(app, doc="/doc/", perfix="/api/", version="0.2.0")
 api.add_namespace(users_namespace)
 api.add_namespace(link_moderation_namespace)
+api.add_namespace(rolling_namespace)
 
 jwt: JWTManager = JWTManager(app)
 
