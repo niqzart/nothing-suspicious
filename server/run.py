@@ -13,7 +13,7 @@ def serve():
     return send_from_directory(app.static_folder, "index.html")
 
 
-api = Api(app, doc="/doc/", perfix="/api/", version="0.2.0")
+api = Api(app, doc="/api/doc/", version="0.3.0")
 api.add_namespace(users_namespace)
 api.add_namespace(link_moderation_namespace)
 api.add_namespace(rolling_namespace)

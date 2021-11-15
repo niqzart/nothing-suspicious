@@ -5,7 +5,7 @@ from add import argument_parser, jwt_authorizer, database_searcher, with_session
 from users import User
 from .entities import LinkCounter, CounterMode
 
-link_moderation_namespace = Namespace("links", path="/links/")
+link_moderation_namespace = Namespace("links", path="/api/links/")
 link_parser: RequestParser = RequestParser()
 link_parser.add_argument("mode", default=CounterMode.EXCLUDE_AUTHOR.to_string(),
                          choices=CounterMode.get_all_field_names())

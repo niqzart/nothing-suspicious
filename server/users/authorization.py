@@ -6,7 +6,7 @@ from flask_restx.reqparse import RequestParser
 from add import argument_parser, with_session, add_auth_cookies
 from .database import User, TokenBlockList
 
-users_namespace: Namespace = Namespace("users", path="/")
+users_namespace: Namespace = Namespace("users", path="/api/")
 
 
 @users_namespace.route("/sign-up/")
