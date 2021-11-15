@@ -1,3 +1,4 @@
+from .authorizer import jwt_authorizer, UserRole
 from .request import argument_parser, TypeEnum
 from .response import add_auth_cookies
 from .session import with_session, with_auto_commit

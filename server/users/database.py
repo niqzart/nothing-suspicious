@@ -6,11 +6,14 @@ from passlib.hash import pbkdf2_sha256
 from sqlalchemy import Column, Integer, String, Boolean, select
 from sqlalchemy.orm import relationship
 
+from add import UserRole
 from setup import Base, Session
 
 
-class User(Base):
+class User(Base, UserRole):
     __tablename__ = "users"
+    not_found_text = "User not found"
+    error_code = 401
 
     @staticmethod
     def generate_hash(password) -> str:
