@@ -1,6 +1,5 @@
-from abc import ABC
 from functools import wraps
-from typing import Type
+from typing import Type, Optional
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restx import Namespace
@@ -10,8 +9,12 @@ from .tables import Identifiable
 from .utils import get_or_pop
 
 
-class UserRole(Identifiable, ABC):
+class UserRole(Identifiable):
     error_code: int = 403
+
+    @classmethod
+    def find_by_id(cls, session, entity_id: int) -> Optional[Identifiable]:
+        raise NotImplementedError
 
 
 def jwt_authorizer(ns: Namespace, role: Type[UserRole], check_only: bool = False, use_session: bool = True):
