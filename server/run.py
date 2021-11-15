@@ -1,6 +1,9 @@
 from flask import send_from_directory
 from flask_restx import Api
+from flask_jwt_extended import JWTManager
 
+from add import with_session
+from users import users_namespace, TokenBlockList
 from setup import app, db_meta
 
 
@@ -9,9 +12,19 @@ def serve():
     return send_from_directory(app.static_folder, "index.html")
 
 
-api = Api(app, doc="/doc/")
+api = Api(app, doc="/doc/", perfix="/api/", version="0.2.0")
+api.add_namespace(users_namespace)
+
+jwt: JWTManager = JWTManager(app)
 
 db_meta.create_all()
+
+
+@jwt.token_in_blocklist_loader
+@with_session
+def check_if_token_revoked(_, jwt_payload, session):
+    return TokenBlockList.find_by_jti(session, jwt_payload["jti"]) is not None
+
 
 if __name__ == "__main__":
     app.run(debug=True)
