@@ -30,5 +30,9 @@ class TypeEnum(IntEnum):
     def get_all_field_names(cls) -> list[str]:
         return [member.lower().replace("_", "-") for member in cls.__members__]
 
+    @classmethod
+    def form_whens(cls) -> list[str]:  # TODO name shouldn't be db-related
+        return list(cls.__members__.items())
+
     def to_string(self) -> str:
         return self.name.lower().replace("_", "-")

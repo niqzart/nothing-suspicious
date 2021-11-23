@@ -1,6 +1,6 @@
 from enum import auto
 
-from sqlalchemy import Column, Integer, ForeignKey, select
+from sqlalchemy import Column, Integer, ForeignKey, select, Enum
 from sqlalchemy.orm import relationship
 
 from add import TypeEnum, Identifiable, Marshalable, create_marshal_model
@@ -21,14 +21,14 @@ class LinkCounter(Base, Identifiable, Marshalable):
     id = Column(Integer, primary_key=True, autoincrement=True)
     # link = Column(String, nullable=False, unique=True)
     counter = Column(Integer, nullable=False, default=0)
-    mode = Column(Integer, nullable=False, default=CounterMode.EXCLUDE_AUTHOR.value)
+    mode = Column(Enum(CounterMode), nullable=False, default=CounterMode.EXCLUDE_AUTHOR)
 
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     user = relationship("User", back_populates="links")
 
     @classmethod
     def create(cls, session, user: User, mode: CounterMode):
-        entity: cls = cls(user=user, mode=mode.value)
+        entity: cls = cls(user=user, mode=mode)
         session.add(entity)
         session.flush()
         return entity
