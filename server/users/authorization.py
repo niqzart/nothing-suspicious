@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource
 from flask_restx.reqparse import RequestParser
 
 from add import argument_parser, with_session, add_auth_cookies
+from setup import mail
 from .database import User, TokenBlockList
 
 users_namespace: Namespace = Namespace("users", path="/api/")
@@ -19,6 +20,9 @@ class SignUp(Resource):
     @argument_parser(users_namespace, parser)
     @add_auth_cookies
     def post(self, session, email: str, password: str):
+        with open(".static/email.html", encoding="utf-8") as f:
+            html = f.read().replace("{code}", "code")
+        mail.send_message("Email Confirmation", recipients=[email], html=html)
         return (user := User.create(session, email, password)) is not None, user
 
 

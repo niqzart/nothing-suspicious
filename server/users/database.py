@@ -32,11 +32,11 @@ class User(Base, UserRole):
 
     @classmethod
     def find_by_id(cls, session: Session, entry_id: int) -> Optional[User]:
-        return session.execute(select(cls).where(cls.id == entry_id)).scalars().first()
+        return session.execute(select(cls).filter_by(id=entry_id)).scalars().first()
 
     @classmethod
     def find_by_email(cls, session: Session, email) -> Optional[User]:
-        return session.execute(select(cls).where(cls.email == email)).scalars().first()
+        return session.execute(select(cls).filter_by(email=email)).scalars().first()
 
     @classmethod
     def create(cls, session: Session, email: str, password: str) -> Optional[User]:
